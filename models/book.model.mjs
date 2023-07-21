@@ -46,6 +46,15 @@ const BookSchema = mongoose.Schema({
     image: {
         type: String,
         required: true,
+    },
+    category_id: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+        ref: 'Category',
+    },
+    subcategories_id: {
+        type: [mongoose.Schema.ObjectId],
+        ref: 'Subcategory',
     }
 }, {timestamps: true});
 

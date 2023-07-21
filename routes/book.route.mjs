@@ -12,20 +12,12 @@ const bookController = new BookController();
 // Apply the createBookValidator middleware to the post route
 bookRouter.route('/')
     .get(bookController.findAll.bind(bookController))
-    .post(createBookValidator, validateRequest, bookController.create.bind(bookController));
+    .post(createBookValidator, bookController.create.bind(bookController));
 
 bookRouter.route('/:id')
-    .get(findOneBookValidator, validateRequest, bookController.findOne.bind(bookController))
-    .put(updateBookValidator, validateRequest, bookController.update.bind(bookController))
-    .delete(deleteBookValidator, validateRequest, bookController.delete.bind(bookController));
+    .get(findOneBookValidator, bookController.findOne.bind(bookController))
+    .put(updateBookValidator, bookController.update.bind(bookController))
+    .delete(deleteBookValidator, bookController.delete.bind(bookController));
 
-// Custom middleware to handle validation errors
-function validateRequest(req, res, next) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
-    }
-    next();
-}
 
 export {bookRouter};

@@ -1,5 +1,9 @@
 import {body} from "express-validator";
 import {Book} from "../../../models/book.model.mjs";
+import {Category} from "../../../models/category.model.mjs";
+import {SubCategory} from "../../../models/subcategory.model.mjs";
+import mongoose from "mongoose";
+import {validatorMiddleware} from "../../../middlewares/validator.middleware.mjs";
 
 const createBookValidator = [
     body('name')
@@ -46,7 +50,38 @@ const createBookValidator = [
 
     body('image')
         .notEmpty().withMessage('Book image is required')
-        .isString().withMessage('Book image must be a string')
+        .isString().withMessage('Book image must be a string'),
+
+    body("category_id")
+        .notEmpty().withMessage("Book category id is required")
+        .isMongoId().withMessage('Book category id is invalid')
+        .custom(async (id) => {
+            const existingCategory = await Category.findById(id);
+            if (!existingCategory) throw new Error(`category id ${id} not exists`);
+            else return true;
+        }),
+
+
+    body("subcategories_id")
+        .optional()
+        .isArray().withMessage("Book subcategories id must be an array")
+        .custom((values) => {
+            values.forEach((id) => {
+                if (!mongoose.Types.ObjectId.isValid(id)) {
+                    throw new Error(`Invalid subcategory id: ${id}`);
+                }
+            });
+            return true;
+        })
+        .custom(async (values) => {
+            for (const id of values) {
+                if (!(await SubCategory.findById(id))) {
+                    throw new Error(`Subcategory id ${id} not found`);
+                }
+            }
+            return true;
+        }),
+    validatorMiddleware
 ];
 
 export {createBookValidator};

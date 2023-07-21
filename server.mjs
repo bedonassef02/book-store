@@ -1,10 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-import { ApiError } from './utils/api.error.mjs';
-import { globalErrors } from './middlewares/error.middleware.mjs';
-import { DBConnection } from './config/database.connection.mjs';
-import { bookRouter } from './routes/book.route.mjs';
+import {ApiError} from './utils/api.error.mjs';
+import {globalErrors} from './middlewares/error.middleware.mjs';
+import {DBConnection} from './config/database.connection.mjs';
+import {bookRouter} from './routes/book.route.mjs';
+import {categoryRouter} from "./routes/category.router.mjs";
 
 
 dotenv.config({path: 'config.env'})
@@ -24,6 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
 // routes
 
 app.use('/api/v1/books', bookRouter);
+app.use('/api/v1/categories', categoryRouter);
 
 app.all('*', (req, res, next) => {
     next(new ApiError(`can't find this route: ${req.originalUrl}`, 400));

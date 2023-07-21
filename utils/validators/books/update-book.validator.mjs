@@ -1,5 +1,8 @@
 import {body, param} from "express-validator";
 import {Book} from "../../../models/book.model.mjs";
+import {Category} from "../../../models/category.model.mjs";
+import {SubCategory} from "../../../models/subcategory.model.mjs";
+import {validatorMiddleware} from "../../../middlewares/validator.middleware.mjs";
 
 const updateBookValidator = [
     param('id')
@@ -12,7 +15,7 @@ const updateBookValidator = [
         .custom(async (value) => {
             // Check if a book with the same name already exists
             const existingBook = await Book.findOne({name: value});
-            if (existingBook) {
+            if (existingBook && value!== existingBook.name) {
                 throw new Error('Book name must be unique');
             }
             return true;
@@ -56,7 +59,29 @@ const updateBookValidator = [
     body('image')
         .optional()
         .notEmpty().withMessage('Book image is required')
-        .isString().withMessage('Book image must be a string')
+        .isString().withMessage('Book image must be a string'),
+
+    body("category_id")
+        .notEmpty().withMessage("Book category id is required")
+        .isMongoId().withMessage('Book category id is invalid')
+        .custom(async (id) => {
+            const existingCategory = await Category.findById(id);
+            if (!existingCategory) throw new Error(`category id ${id} not exists`);
+            else return true;
+        }),
+
+    body('subcategories_id')
+        .optional()
+        .isArray().withMessage('Book subcategories id must be an array')
+        .custom((values) => {
+            values.forEach(async (id) => {
+                if (!await SubCategory.findById(id)) {
+                    throw new Error(`subcategory id ${id} not found`);
+                }
+            })
+            return true;
+        }),
+    validatorMiddleware
 ];
 
 export {updateBookValidator};
