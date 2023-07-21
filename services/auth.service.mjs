@@ -1,11 +1,13 @@
 import {User} from "../models/user.model.mjs";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
+import {CartService} from "./cart.service.mjs";
 
 class AuthService {
     async create(user) {
         user = await User.create(user);
         const {password, ...userWithoutPassword} = user._doc;
+        await this.#createCart(user._doc._id);
         return userWithoutPassword;
     }
 
@@ -27,6 +29,11 @@ class AuthService {
         const payload = {userId: user._id, email: user.email, type: user.type}; // Customize the payload as needed
 
         return jwt.sign(payload, process.env.TOKEN_SECRET_KEY, {expiresIn});
+    }
+
+    async #createCart(user_id) {
+        const cartService = new CartService();
+        await cartService.create(user_id);
     }
 }
 
