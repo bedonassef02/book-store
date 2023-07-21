@@ -24,7 +24,7 @@ class CategoryService {
     }
 
     async update(id, category) {
-        return Category.findOneAndUpdate(id, category, {new: true});
+        return Category.findByIdAndUpdate(id, category, {new: true});
     }
 
     async delete(id) {

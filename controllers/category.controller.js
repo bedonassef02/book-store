@@ -29,7 +29,7 @@ class CategoryController {
 
     async update(request, response) {
         const {id} = request.params;
-        const category = await this.categoryService.update(id, request.body);
+        const category = await this.categoryService.update(id, {...request.body});
         response.status(200).json(category);
     }
 
