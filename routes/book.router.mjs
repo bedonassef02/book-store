@@ -5,6 +5,8 @@ import {findOneBookValidator} from "../utils/validators/books/find-one-book.vali
 import {updateBookValidator} from "../utils/validators/books/update-book.validator.mjs";
 import {deleteBookValidator} from "../utils/validators/books/delete-book.validator.mjs";
 import {uploadImage} from "../middlewares/upload-image.middleware.mjs";
+import {authMiddleware} from "../middlewares/auth.middleware.mjs";
+import {roleGuard} from "../guards/role.guard.js";
 
 const bookRouter = express.Router();
 const bookController = new BookController();
@@ -12,12 +14,12 @@ const bookController = new BookController();
 // Apply the createBookValidator middleware to the post route
 bookRouter.route('/')
     .get(bookController.findAll.bind(bookController))
-    .post(uploadImage, createBookValidator, bookController.create.bind(bookController));
+    .post(authMiddleware, roleGuard(['admin', 'editor', 'manager']), uploadImage, createBookValidator, bookController.create.bind(bookController));
 
 bookRouter.route('/:id')
     .get(findOneBookValidator, bookController.findOne.bind(bookController))
-    .put(updateBookValidator, bookController.update.bind(bookController))
-    .delete(deleteBookValidator, bookController.delete.bind(bookController));
+    .put(authMiddleware, roleGuard(['admin', 'editor', 'manager']), updateBookValidator, bookController.update.bind(bookController))
+    .delete(authMiddleware, roleGuard(['admin']), deleteBookValidator, bookController.delete.bind(bookController));
 
 
 export {bookRouter};
