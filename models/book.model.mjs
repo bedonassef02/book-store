@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-const BookSchema = mongoose.Schema({
+const BookSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
