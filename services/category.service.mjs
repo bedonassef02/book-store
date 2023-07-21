@@ -28,7 +28,7 @@ class CategoryService {
     }
 
     async delete(id) {
-        return Category.findOneAndDelete(id);
+        await Category.findOneAndDelete(id);
     }
 }
 
