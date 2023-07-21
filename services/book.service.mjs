@@ -29,7 +29,7 @@ class BookService {
     }
 
     async delete(id) {
-        return Book.findByIdAndDelete(id);
+        await Book.findByIdAndDelete(id);
     }
 }
 

@@ -52,22 +52,15 @@ class BookController {
     async update(request, response) {
         const {id} = request.params;
         const book = await this.bookService.update(id, request.body);
-        if (book) {
-            response.status(200).json(book);
-        } else {
-            response.status(404).json(`book not found with id ${id}`);
-        }
+        response.status(200).json(book);
     }
 
     async delete(request, response) {
         const {id} = request.params;
-        const book = await this.bookService.delete(id);
-        if (book) {
-            response.status(200).json({message: `book deleted successfully`});
-        } else {
-            response.status(404).json(`book not found with id ${id}`);
-        }
+        await this.bookService.delete(id);
+        response.status(200).json({message: `book deleted successfully`});
     }
+
 }
 
 export {BookController};
