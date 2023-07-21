@@ -25,6 +25,7 @@ const updateBookValidator = [
             if (existingBook && existingBook.name !== name) {
                 const isNameExist = await Book.findOne({name: name});
                 if (isNameExist) {
+
                     throw new Error('Book name must be unique');
                 }
             }
