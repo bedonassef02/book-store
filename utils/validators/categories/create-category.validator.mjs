@@ -1,5 +1,6 @@
 import {body} from "express-validator";
 import {Category} from "../../../models/category.model.mjs";
+import {validatorMiddleware} from "../../../middlewares/validator.middleware.mjs";
 
 const createCategoryValidator = [
     body('name')
@@ -13,6 +14,7 @@ const createCategoryValidator = [
             }
             return true;
         }),
+    validatorMiddleware
 ];
 
 export {createCategoryValidator};

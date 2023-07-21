@@ -5,9 +5,9 @@ import {validatorMiddleware} from "../../../middlewares/validator.middleware.mjs
 const deleteBookValidator = [
     param('id')
         .isMongoId().withMessage('book id is invalid')
-        .custom(async (value) => {
-            const existingBook = await Book.findOne({name: value});
-            if (existingBook) {
+        .custom(async (id) => {
+            const existingBook = await Book.findById(id);
+            if (!existingBook) {
                 throw new Error('Book not found');
             }
             return true;

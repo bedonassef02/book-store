@@ -6,17 +6,27 @@ import {validatorMiddleware} from "../../../middlewares/validator.middleware.mjs
 
 const updateBookValidator = [
     param('id')
-        .isMongoId().withMessage('book id is invalid'),
+        .isMongoId().withMessage('book id is invalid')
+        .custom((id) => {
+            const isExist = Book.findById(id);
+            if (!isExist) {
+                throw new Error(`Book ${id} not exists`);
+            }
+            return true;
+        }),
 
     body('name')
         .optional()
         .notEmpty().withMessage('Book name is required')
         .isLength({min: 3, max: 100}).withMessage('Book name must be between 3 and 100 characters')
-        .custom(async (value) => {
+        .custom(async (name, {req}) => {
             // Check if a book with the same name already exists
-            const existingBook = await Book.findOne({name: value});
-            if (existingBook && value!== existingBook.name) {
-                throw new Error('Book name must be unique');
+            const existingBook = await Book.findById(req.params.id); // Use req.params.id to get the book ID from the URL parameter
+            if (existingBook && existingBook.name !== name) {
+                const isNameExist = await Book.findOne({name: name});
+                if (isNameExist) {
+                    throw new Error('Book name must be unique');
+                }
             }
             return true;
         }),
@@ -62,6 +72,7 @@ const updateBookValidator = [
         .isString().withMessage('Book image must be a string'),
 
     body("category_id")
+        .optional()
         .notEmpty().withMessage("Book category id is required")
         .isMongoId().withMessage('Book category id is invalid')
         .custom(async (id) => {
