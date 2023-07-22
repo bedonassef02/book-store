@@ -4,8 +4,7 @@ const CartItemSchema = new mongoose.Schema({
     book_id: {
         type: mongoose.Schema.ObjectId,
         ref: 'Book',
-        required: true,
-        unique: true
+        required: true
     },
     quantity: {
         type: Number,
