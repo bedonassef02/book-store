@@ -26,7 +26,7 @@ class AuthService {
     generateToken(user) {
         const secretKey = process.env.TOKEN_SECRET_KEY; // Replace this with a strong secret key
         const expiresIn = process.env.EXPIRES_IN; // Token expiration time, you can adjust this as needed
-        const payload = {userId: user._id, email: user.email, type: user.type}; // Customize the payload as needed
+        const payload = {user_id: user._id, email: user.email, type: user.type}; // Customize the payload as needed
 
         return jwt.sign(payload, process.env.TOKEN_SECRET_KEY, {expiresIn});
     }
