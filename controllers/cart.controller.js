@@ -20,11 +20,24 @@ class CartController {
         return response.status(201).json(db_cart);
     }
 
-    delete() {
+    async delete(request, response) {
+        const {book_id} = request.body;
+        const {user_id} = request.user;
+        const cart = await this.cartService.deleteFromCart(user_id, book_id);
+        if (cart) {
+            return response.status(200).json(cart);
+        }
+        response.status(404).json({message: `Book ${book_id} not found in cart`});
     }
 
-    truncate() {
-
+    async truncate(request, response) {
+        const {user_id} = request.user;
+        const {id} = request.params;
+        const cart = await this.cartService.deleteAllBooks(user_id, id);
+        if (cart) {
+            return response.status(200).json(cart);
+        }
+        response.status(404).json({message: `cart ${id} not found`});
     }
 }
 

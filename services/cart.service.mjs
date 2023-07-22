@@ -19,7 +19,7 @@ class CartService {
         const cart = await Cart.findOne({user_id: user_id});
 
         const existingItem = cart.items.find(item => {
-            return item.book_id.toString() == book_id;
+            return item.book_id.toString() === book_id;
         });
 
         if (existingItem) {
@@ -40,6 +40,30 @@ class CartService {
         await cart.save();
         return cart;
 
+    }
+
+    async deleteFromCart(user_id, book_id) {
+        const cart = await Cart.findOne({user_id: user_id});
+        const itemIndex = cart.items.findIndex(item => item.book_id.toString() === book_id);
+
+        if (itemIndex !== -1) {
+            cart.items.splice(itemIndex, 1);
+            await cart.save();
+            return cart;
+        } else {
+            return false;
+        }
+    }
+
+    async deleteAllBooks(user_id, id) {
+        const cart = await Cart.findOne({user_id: user_id});
+        if (cart._id.toString() !== id) {
+            return false;
+        }
+        console.log(cart)
+        cart.items = [];
+        cart.save();
+        return cart;
     }
 
 }
