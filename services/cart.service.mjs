@@ -1,5 +1,4 @@
 import { Cart } from "../models/cart.model.mjs";
-import { CartItem } from "../models/cart-item.model.mjs";
 
 class CartService {
     async findOne(user_id) {
