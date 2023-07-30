@@ -8,6 +8,8 @@ import {bookRouter} from './routes/book.router.mjs';
 import {categoryRouter} from "./routes/category.router.mjs";
 import {subCategoryRouter} from "./routes/subcategory.router.mjs";
 import {authRouter} from "./routes/auth.router.mjs";
+import {cartRouter} from "./routes/cart.router.mjs";
+import {wishlistRouter} from "./routes/wishlist.router.mjs";
 
 
 dotenv.config({path: 'config.env'})
@@ -22,7 +24,8 @@ app.use(express.json());
 if (process.env.NODE_ENV !== 'production') {
     app.use(morgan('dev'));
     console.log(`node ${process.env.NODE_ENV}`);
-}
+}9
+
 
 // routes
 
@@ -30,6 +33,8 @@ app.use('/api/v1/books', bookRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/subcategories', subCategoryRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/carts', cartRouter);
+app.use('/api/v1/wishlist', wishlistRouter);
 
 app.all('*', (req, res, next) => {
     next(new ApiError(`can't find this route: ${req.originalUrl}`, 400));
