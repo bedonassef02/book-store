@@ -6,16 +6,26 @@ class WishlistService {
     }
 
     async toggleBook(user_id, book_id) {
-        const wishlist = await this.findOne(user_id);
-        if (this.#isBookExist({wishlist: wishlist, book_id: book_id})) {
+        let wishlist = await this.findOne(user_id);
+        if (!wishlist) {
+            wishlist = await this.#create(user_id);
+            wishlist.books = [book_id];
+            await wishlist.save();
+            return wishlist;
+        }
+        if (!this.#isBookExist({wishlist: wishlist, book_id: book_id})) {
             return await this.#addToList({wishlist: wishlist, book_id: book_id})
         } else {
             return await this.#deleteFromList({wishlist: wishlist, book_id: book_id})
         }
     }
 
+    async #create(user_id) {
+        return await Wishlist.create({user_id: user_id});
+    }
+
     #isBookExist({wishlist, book_id}) {
-        return wishlist.books.find((book) => book.id.toString() === book_id);
+        return wishlist.books === null ? true : wishlist.books.find((book) => book._id.toString() === book_id);
     }
 
     async #addToList({wishlist, book_id}) {
@@ -25,14 +35,10 @@ class WishlistService {
     }
 
     async #deleteFromList({wishlist, book_id}) {
-        const bookIndex = wishlist.books.findIndex(book => book.id.toString() === book_id);
-        if (bookIndex !== -1) {
-            wishlist.books.splice(bookIndex, 1);
-            await wishlist.save();
-            return wishlist;
-        } else {
-            return false;
-        }
+        const bookIndex = wishlist.books.findIndex(book => book._id.toString() === book_id);
+        wishlist.books.splice(bookIndex, 1);
+        await wishlist.save();
+        return wishlist;
     }
 
 

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 import {CartService} from "./cart.service.mjs";
 import {WishlistService} from "./wishlist.service.mjs";
+import {Wishlist} from "../models/wishlist.model.mjs";
 
 class AuthService {
     async create(user) {
@@ -40,7 +41,7 @@ class AuthService {
 
     async #createWishList(user_id) {
         const wishListService = new WishlistService();
-        await wishListService.create(user_id);
+        await Wishlist.create({user_id: user_id});
     }
 }
 

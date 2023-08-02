@@ -6,9 +6,9 @@ class WishlistController {
         this.withlistService = new WishlistService();
     }
 
-    findOne(request, response) {
+    async findOne(request, response) {
         const {user_id} = request.user;
-        const wishlist = this.withlistService.findOne(user_id);
+        const wishlist = await this.withlistService.findOne(user_id);
         response.status(200).json(wishlist);
     }
 
@@ -16,7 +16,8 @@ class WishlistController {
         const {user_id} = request.user;
         const {book_id} = request.params;
         const wishlist = await this.withlistService.toggleBook(user_id, book_id);
-        response.status(200).json(wishlist);
+        if(!wishlist)response.status(404).json('Book not found');
+        else response.status(200).json(wishlist);
     }
 
 }

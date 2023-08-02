@@ -20,7 +20,7 @@ class SubCategoryService {
     }
 
     async create(subSubCategory) {
-        return await SubCategory.create(subSubCategory);
+        return SubCategory.create(subSubCategory);
     }
 
     async update(id, subSubCategory) {

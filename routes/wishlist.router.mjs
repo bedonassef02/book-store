@@ -7,9 +7,11 @@ import {authMiddleware} from "../middlewares/auth.middleware.mjs";
 const wishlistRouter = express.Router();
 const wishlistController = new WishlistController();
 
-wishlistRouter.route('/book_id')
-    .get(authMiddleware, roleGuard(['user']), toggleBookValidator, wishlistController.toggleBook.bind(wishlistController))
-    .post(authMiddleware, roleGuard(['user']), wishlistController.findOne.bind(wishlistController))
+wishlistRouter.route('/:book_id')
+    .post(authMiddleware, toggleBookValidator, wishlistController.toggleBook.bind(wishlistController))
+
+wishlistRouter.route('/')
+    .get(authMiddleware, roleGuard(['user']), wishlistController.findOne.bind(wishlistController))
 
 
 export {wishlistRouter};

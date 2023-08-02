@@ -18,7 +18,7 @@ bookRouter.route('/')
 
 bookRouter.route('/:id')
     .get(findOneBookValidator, bookController.findOne.bind(bookController))
-    .put(authMiddleware, roleGuard(['admin', 'editor', 'manager']), updateBookValidator, bookController.update.bind(bookController))
+    .put(authMiddleware, roleGuard(['admin', 'editor', 'manager']), uploadImage, updateBookValidator, bookController.update.bind(bookController))
     .delete(authMiddleware, roleGuard(['admin']), deleteBookValidator, bookController.delete.bind(bookController));
 
 

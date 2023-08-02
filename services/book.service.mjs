@@ -21,7 +21,7 @@ class BookService {
     }
 
     async create(book) {
-        return await Book.create(book);
+        return Book.create(book);
     }
 
     async update(id, book) {
@@ -31,6 +31,8 @@ class BookService {
     async delete(id) {
         await Book.findByIdAndDelete(id);
     }
+
+
 }
 
 export {BookService};
